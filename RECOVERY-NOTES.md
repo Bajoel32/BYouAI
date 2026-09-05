@@ -6,15 +6,17 @@ snapshot `~/.claude/file-history/`, dan build terakhir di `.next/` (prod 01:28 +
 dev 03:39, tepat sebelum terhapus).
 
 ## Status verifikasi
-- `npx tsc --noEmit` → **lulus (exit 0)** terhadap dependency asli.
+- `npm install` → OK, `package-lock.json` diregenerasi, 0 vulnerability.
+- `npx next build` → **lulus**, 20 route ter-generate, cocok persis dengan
+  `app-path-routes-manifest.json` build terakhir. TypeScript bersih.
 - 51 file identik byte-per-byte antara hasil rekonstruksi dan build terakhir.
-- Struktur route dicek terhadap `.next/app-path-routes-manifest.json` final.
 
 ## Yang TIDAK bisa dipulihkan
 - **Riwayat git** (`.git/` ikut terhapus, tak ada remote). Hanya keadaan file
-  terakhir yang direkonstruksi — bila di-`git init`, jadinya satu commit baru.
-- `package-lock.json` — jalankan `npm install` untuk regenerasi (sekaligus
-  memperbaiki `node_modules` lama yang rusak: `@swc/helpers` hilang).
+  terakhir yang direkonstruksi — repo di-`git init` ulang, satu commit awal.
+- `src/app/_og/*.woff` (Inter 400/600, JetBrains Mono 400) — aset biner untuk OG
+  image, hilang total, di-fetch ulang dari `@fontsource` (subset Latin). Bukan
+  subset asli tapi fungsinya identik.
 
 ## Sengaja TIDAK dikembalikan (Anda `git rm` di sesi terakhir, 5 Sep ~18:03)
 - `src/app/solusi/klinik-dokter/clinic-sim.tsx`
