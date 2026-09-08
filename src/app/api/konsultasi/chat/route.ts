@@ -7,8 +7,12 @@ import { supabaseAdmin } from "@/lib/supabase";
 import { contextBlock, retrieve, toCitations } from "@/lib/rag";
 import { planById, formatIDR } from "@/lib/plans";
 import type { ChatAction, ChatErrorBody, Lead } from "@/lib/consultation";
+import { acquireGlobalSlot, clientIp, envInt, fixedWindow } from "@/lib/rate-limit";
 
 export const runtime = "nodejs";
+// Hard ceiling on server-side execution; pairs with the OpenAI client timeout
+// in src/lib/openai.ts so a hung upstream can't pin a stream open indefinitely.
+export const maxDuration = 30;
 
 // ---- Request validation ---------------------------------------------------
 
@@ -47,31 +51,17 @@ const bodySchema = z.object({
     .max(50),
 });
 
-// ---- Rate limiting (per-instance, best effort) ---------------------------
+// ---- Abuse guards -------------------------------------------------------------
+//
+// Two layers, both in-memory (see src/lib/rate-limit.ts and SECURITY.md):
+//   - per-IP window: normal fair-use throttle, keyed on a spoofable header
+//   - global slot: a process-wide ceiling on concurrent + per-minute OpenAI
+//     calls, so header spoofing can't turn this into an unbounded spend.
 
-const WINDOW_MS = 10 * 60_000;
-const MAX_HITS = 20;
-const hits = new Map<string, { count: number; resetAt: number }>();
-
-function rateLimited(key: string): boolean {
-  const now = Date.now();
-  if (hits.size > 5000) {
-    for (const [k, v] of hits) if (now > v.resetAt) hits.delete(k);
-  }
-  const rec = hits.get(key);
-  if (!rec || now > rec.resetAt) {
-    hits.set(key, { count: 1, resetAt: now + WINDOW_MS });
-    return false;
-  }
-  rec.count += 1;
-  return rec.count > MAX_HITS;
-}
-
-function clientIp(request: Request): string | null {
-  const fwd = request.headers.get("x-forwarded-for");
-  const ip = fwd?.split(",")[0]?.trim() || request.headers.get("x-real-ip");
-  return ip && /^[0-9a-f.:]+$/i.test(ip) ? ip : null;
-}
+const PER_IP_LIMIT = envInt("KONSULTASI_PER_IP_PER_10MIN", 20);
+const PER_IP_WINDOW_MS = 10 * 60_000;
+const GLOBAL_MAX_PER_MIN = envInt("KONSULTASI_GLOBAL_PER_MIN", 120);
+const GLOBAL_MAX_CONCURRENT = envInt("KONSULTASI_GLOBAL_CONCURRENT", 8);
 
 // ---- Tools (function calling) --------------------------------------------
 //
@@ -276,9 +266,16 @@ function errorJson(body: ChatErrorBody, status: number): Response {
 const MAX_TOOL_ROUNDS = 3; // last round always runs without tools, to force a final answer
 
 export async function POST(request: Request): Promise<Response> {
-  const ip = clientIp(request);
-  if (rateLimited(ip ?? "unknown")) {
-    return errorJson({ error: "Terlalu banyak pesan. Coba lagi beberapa menit lagi." }, 429);
+  const ip = clientIp(request.headers);
+  const perIp = fixedWindow(`konsultasi:${ip ?? "unknown"}`, {
+    limit: PER_IP_LIMIT,
+    windowMs: PER_IP_WINDOW_MS,
+  });
+  if (!perIp.ok) {
+    return errorJson(
+      { error: "Terlalu banyak pesan. Coba lagi beberapa menit lagi." },
+      429,
+    );
   }
 
   let raw: unknown;
@@ -300,6 +297,20 @@ export async function POST(request: Request): Promise<Response> {
   const lastUser = [...messages].reverse().find((m) => m.role === "user");
   if (!lastUser) {
     return errorJson({ error: "Butuh minimal satu pesan dari pengguna." }, 422);
+  }
+
+  // Process-wide backstop: cap concurrent + per-minute OpenAI work no matter how
+  // many distinct (possibly spoofed) IPs are asking. Released when the stream
+  // ends — see the `finally` / `cancel` below.
+  const slot = acquireGlobalSlot({
+    maxPerMin: GLOBAL_MAX_PER_MIN,
+    maxConcurrent: GLOBAL_MAX_CONCURRENT,
+  });
+  if (!slot.ok) {
+    return errorJson(
+      { error: "Asisten sedang ramai. Coba lagi sebentar." },
+      503,
+    );
   }
 
   // Retrieval is best-effort: retrieve() already swallows its own errors.
@@ -467,8 +478,13 @@ export async function POST(request: Request): Promise<Response> {
           sse("error", { message: "Asisten sedang tidak tersedia. Coba lagi sebentar." }),
         );
       } finally {
+        slot.release();
         controller.close();
       }
+    },
+    // Client hung up mid-stream — free the global slot immediately.
+    cancel() {
+      slot.release();
     },
   });
 

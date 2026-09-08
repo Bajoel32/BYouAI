@@ -1,47 +1,16 @@
 import { Container, SectionHeading } from "@/components/ui";
+import { getDictionary } from "@/dictionaries";
 
-const FAQS = [
-  {
-    q: "Apakah data kami aman dan privat?",
-    a: "Ya. Data Anda terenkripsi, terisolasi per klien, dan tidak pernah dipakai untuk melatih model pihak ketiga. Tersedia opsi on-prem dan pemilihan region penyimpanan.",
-  },
-  {
-    q: "Model AI apa yang dipakai?",
-    a: "Model-agnostik. Anda bisa memakai Claude, GPT, Llama, atau model lokal — dan menggantinya kapan saja tanpa menulis ulang aplikasi.",
-  },
-  {
-    q: "Berapa lama implementasinya?",
-    a: "Pilot biasanya 2–3 minggu. Versi produksi 6–10 minggu, tergantung jumlah dan kompleksitas integrasi data.",
-  },
-  {
-    q: "Bagaimana akurasi jawaban dijaga?",
-    a: "Retrieval hybrid, sitasi ke sumber pada setiap jawaban, uji regresi jawaban, deteksi halusinasi, serta opsi human-in-the-loop untuk kasus sensitif.",
-  },
-  {
-    q: "Bisakah dijalankan on-premise?",
-    a: "Bisa. Kami mendukung deployment di server Anda sendiri atau di dalam VPC Anda, termasuk dengan model bahasa lokal.",
-  },
-  {
-    q: "Apakah Bahasa Indonesia didukung penuh?",
-    a: "Ya, termasuk teks campur kode Indonesia–Inggris dan istilah domain spesifik industri Anda.",
-  },
-];
+export async function Faq() {
+  const { faq } = await getDictionary();
 
-export function Faq() {
   return (
-    <section
-      id="faq"
-      className="border-t border-line bg-surface py-24 md:py-32"
-    >
+    <section id="faq" className="border-t border-line bg-surface py-24 md:py-32">
       <Container className="grid gap-12 lg:grid-cols-[1fr_1.4fr] lg:gap-20">
-        <SectionHeading
-          kicker="FAQ"
-          title="Pertanyaan yang sering muncul"
-          lead="Belum terjawab? Tulis ke halo@byouai.com — kami balas dalam 1 hari kerja."
-        />
+        <SectionHeading kicker={faq.kicker} title={faq.title} lead={faq.lead} />
 
         <div className="reveal divide-y divide-line border-y border-line">
-          {FAQS.map((item) => (
+          {faq.items.map((item) => (
             <details key={item.q} className="group py-4">
               <summary className="flex cursor-pointer list-none items-center justify-between gap-4 py-1 text-base font-medium marker:content-none">
                 {item.q}

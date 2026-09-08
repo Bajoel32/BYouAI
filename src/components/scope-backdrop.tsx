@@ -3,10 +3,12 @@
 import { useEffect, useRef } from "react";
 
 /**
- * A single oscilloscope beam: a glowing dot that sweeps right-to-left in the
- * band just under the navbar, bobbing up and down and leaving a fading
- * phosphor trail. Pauses when offscreen or the tab is hidden; renders one
- * frozen sweep when the user prefers reduced motion.
+ * A single oscilloscope beam: a glowing dot that sweeps right-to-left across
+ * whatever band it's placed in, bobbing up and down and leaving a fading
+ * phosphor trail. Fully fluid — amplitude, trail length and stroke weight all
+ * scale to the container, so it fits any width/height it's given. Pauses when
+ * offscreen or the tab is hidden; renders one frozen sweep when the user
+ * prefers reduced motion.
  */
 export function ScopeBackdrop({ className }: { className?: string }) {
   const ref = useRef<HTMLCanvasElement>(null);
@@ -20,6 +22,8 @@ export function ScopeBackdrop({ className }: { className?: string }) {
     const reduce = window.matchMedia(
       "(prefers-reduced-motion: reduce)",
     ).matches;
+    const clamp = (v: number, lo: number, hi: number) =>
+      Math.max(lo, Math.min(v, hi));
 
     let w = 0;
     let h = 0;
@@ -27,8 +31,9 @@ export function ScopeBackdrop({ className }: { className?: string }) {
     let running = false;
     let last = 0;
     let x = 0; // beam x — decreases (right → left)
+    let trailMax = 68; // points kept in the phosphor trail (scales with width)
+    let weight = 1; // stroke/glow weight (scales with height)
     const trail: Array<{ x: number; y: number }> = [];
-    const TRAIL = 68;
     const SPEED = 0.3; // widths per second
 
     const resize = () => {
@@ -39,14 +44,20 @@ export function ScopeBackdrop({ className }: { className?: string }) {
       canvas.width = Math.max(1, Math.round(w * dpr));
       canvas.height = Math.max(1, Math.round(h * dpr));
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      // Keep the trail's on-screen length and the stroke weight proportional to
+      // the box, so the beam looks the same in a thin strip or a tall panel.
+      trailMax = Math.round(clamp(w * 0.11, 40, 160));
+      weight = clamp(h / 96, 0.7, 2.4);
+      if (trail.length > trailMax) trail.splice(0, trail.length - trailMax);
     };
 
     // Vertical position of the beam — sharp triangle waves so the trail reads
-    // as a jagged zig-zag, sitting just under the navbar.
+    // as a jagged zig-zag. Centered in the box with amplitude a fixed fraction
+    // of its height, so it fills whatever band it's dropped into.
     const tri = (u: number) => 2 * Math.abs(2 * (u - Math.floor(u + 0.5))) - 1;
     const yAt = (px: number, t: number) => {
-      const centerY = Math.min(h * 0.62, 88);
-      const amp = Math.min(h * 0.16, 20);
+      const centerY = h * 0.5;
+      const amp = h * 0.34;
       const u = px / w;
       const a = tri(u * 6 + t * 0.55); // main zig-zag
       const b = tri(u * 17 - t * 0.9) * 0.35; // finer jitter
@@ -68,24 +79,24 @@ export function ScopeBackdrop({ className }: { className?: string }) {
       ctx.lineJoin = "miter";
       ctx.miterLimit = 2;
       ctx.strokeStyle = grad;
-      ctx.lineWidth = 1.5;
+      ctx.lineWidth = 1.5 * weight;
       ctx.shadowColor = `rgb(${ACCENT})`;
-      ctx.shadowBlur = 4;
+      ctx.shadowBlur = 4 * weight;
       ctx.beginPath();
       ctx.moveTo(tail.x, tail.y);
       for (let i = 1; i < trail.length; i++) ctx.lineTo(trail[i].x, trail[i].y);
       ctx.stroke();
 
       // Bright head + halo.
-      ctx.shadowBlur = 16;
+      ctx.shadowBlur = 16 * weight;
       ctx.fillStyle = `rgb(${ACCENT})`;
       ctx.beginPath();
-      ctx.arc(head.x, head.y, 2.8, 0, Math.PI * 2);
+      ctx.arc(head.x, head.y, 2.8 * weight, 0, Math.PI * 2);
       ctx.fill();
       ctx.shadowBlur = 0;
       ctx.fillStyle = `rgba(${ACCENT}, 0.22)`;
       ctx.beginPath();
-      ctx.arc(head.x, head.y, 7, 0, Math.PI * 2);
+      ctx.arc(head.x, head.y, 7 * weight, 0, Math.PI * 2);
       ctx.fill();
     };
 
@@ -100,7 +111,7 @@ export function ScopeBackdrop({ className }: { className?: string }) {
         trail.length = 0; // new sweep — don't streak back across
       }
       trail.push({ x, y: yAt(x, ms / 1000) });
-      if (trail.length > TRAIL) trail.shift();
+      if (trail.length > trailMax) trail.shift();
 
       render();
     };
@@ -122,8 +133,9 @@ export function ScopeBackdrop({ className }: { className?: string }) {
 
     const frozen = () => {
       trail.length = 0;
-      for (let i = 0; i < TRAIL; i++) {
-        const px = w * 0.06 + (w * 0.62 * i) / TRAIL;
+      const span = Math.max(2, trailMax);
+      for (let i = 0; i < span; i++) {
+        const px = (w * i) / (span - 1);
         trail.push({ x: px, y: yAt(px, 2) });
       }
       render();

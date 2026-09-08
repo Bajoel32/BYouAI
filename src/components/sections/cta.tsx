@@ -1,6 +1,11 @@
 import { Container, Button } from "@/components/ui";
+import { getDictionary, getLocale } from "@/dictionaries";
+import { localizedHref } from "@/lib/i18n";
 
-export function Cta() {
+export async function Cta() {
+  const [dict, locale] = await Promise.all([getDictionary(), getLocale()]);
+  const c = dict.cta;
+
   return (
     <section
       id="kontak"
@@ -17,26 +22,27 @@ export function Cta() {
       />
       <Container className="relative py-20 text-center md:py-28">
         <h2 className="mx-auto max-w-2xl text-3xl font-semibold tracking-tight md:text-5xl md:leading-[1.1]">
-          Mulai dari satu use-case.{" "}
+          {c.titleBefore}{" "}
           <span className="font-serif font-normal italic text-accent">
-            Lihat hasilnya
+            {c.titleEmphasis}
           </span>{" "}
-          dalam 3 minggu.
+          {c.titleAfter}
         </h2>
-        <p className="mx-auto mt-4 max-w-lg text-white/60">
-          Buat estimasi paket dalam satu menit, atau ceritakan alur kerja dan
-          data Anda — kami kembali dengan rancangan solusi, tanpa biaya.
-        </p>
+        <p className="mx-auto mt-4 max-w-lg text-white/60">{c.lead}</p>
         <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
-          <Button href="/invoice" variant="primary" className="w-full sm:w-auto">
-            Buat estimasi paket
+          <Button
+            href={localizedHref("/invoice", locale)}
+            variant="primary"
+            className="w-full sm:w-auto"
+          >
+            {c.primary}
           </Button>
           <Button
-            href="/konsultasi"
+            href={localizedHref("/konsultasi", locale)}
             variant="ghostDark"
             className="w-full sm:w-auto"
           >
-            Jadwalkan konsultasi
+            {c.secondary}
           </Button>
         </div>
       </Container>
