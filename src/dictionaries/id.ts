@@ -80,6 +80,11 @@ export const id = {
         description:
           "Ceritakan kebutuhan Anda ke asisten BYouAI — cakupan, data, dan estimasi biaya untuk AI kustom berbasis RAG di atas data Anda sendiri.",
       },
+      solusiEcommerce: {
+        title: "Solusi E-commerce",
+        description:
+          "Agent AI untuk toko online — menjawab dari katalog, stok, harga, dan kebijakan retur Anda secara real-time, dengan aksi ke API toko dan handoff ke tim CS.",
+      },
       privasi: {
         title: "Kebijakan Privasi",
         description:
@@ -119,6 +124,17 @@ export const id = {
     langLabel: "Ganti bahasa",
   },
 
+  themeToggle: {
+    label: "Tema",
+    current: "Tema saat ini",
+    switchTo: "Ganti ke",
+    modes: {
+      system: "sistem",
+      light: "terang",
+      dark: "gelap",
+    },
+  },
+
   footer: {
     tagline:
       "AI kustom berbasis RAG di atas data Anda sendiri. Akurat, tersitasi, siap produksi.",
@@ -138,10 +154,10 @@ export const id = {
       {
         title: "Solusi",
         links: [
-          { label: "E-commerce", href: "/solusi" },
-          { label: "Firma Hukum", href: "/solusi" },
-          { label: "Klinik & Dokter", href: "/solusi" },
-          { label: "Industri lain", href: "/#kontak" },
+          { label: "E-commerce", href: "/solusi/e-commerce" },
+          { label: "Firma Hukum", href: "/solusi/firma-hukum" },
+          { label: "Klinik & Dokter", href: "/solusi/klinik-dokter" },
+          { label: "Industri lain", href: "/konsultasi?industri=lainnya" },
         ],
       },
       {
@@ -410,6 +426,25 @@ export const id = {
         cta: "Hubungi tim",
       },
     },
+  },
+
+  /** Headline block for /konsultasi. The rest of the page (form fields, chat UI)
+   * is still hardcoded Indonesian — see the file header note. */
+  konsultasi: {
+    kicker: "Konsultasi",
+    titleBefore: "Ceritakan kebutuhan Anda.",
+    titleEmphasis: "Dapatkan arah solusi",
+    titleAfter: "dalam hitungan menit.",
+    lead: "Asisten ini menjawab dengan basis pengetahuan BYouAI. Isi data singkat, lalu tanyakan apa saja — dari cakupan, kesiapan data, hingga estimasi biaya.",
+  },
+
+  /** Headline block for /solusi/e-commerce. The rest of the page (sandbox demos,
+   * lead form) is still hardcoded Indonesian — see the file header note. */
+  solusiEcommerce: {
+    kicker: "Solusi · E-commerce",
+    titleBefore: "Agent belanja & customer service yang",
+    titleEmphasis: "tahu isi toko Anda",
+    lead: "Dibangun di atas katalog, inventori, dan kebijakan toko Anda — bukan chatbot generik. Setiap jawaban membawa sumbernya, setiap aksi terhubung ke sistem yang sudah Anda pakai.",
   },
 
   og: {

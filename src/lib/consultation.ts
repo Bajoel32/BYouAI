@@ -44,6 +44,10 @@ export const INDUSTRIES: { id: Industry; label: string }[] = [
 export const industryLabel = (id: string): string =>
   INDUSTRIES.find((i) => i.id === id)?.label ?? "bisnis Anda";
 
+/** Type guard for the `?industri=` query param on `/konsultasi`. */
+export const isIndustry = (value: unknown): value is Industry =>
+  typeof value === "string" && INDUSTRIES.some((i) => i.id === value);
+
 export type Lead = {
   name: string;
   email: string;

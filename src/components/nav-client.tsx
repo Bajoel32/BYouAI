@@ -13,10 +13,12 @@ import type { Dictionary } from "@/dictionaries/id";
 
 export function NavClient({
   dict,
+  themeToggleDict,
   locale,
   solid = false,
 }: {
   dict: Dictionary["nav"];
+  themeToggleDict: Dictionary["themeToggle"];
   locale: Locale;
   solid?: boolean;
 }) {
@@ -105,7 +107,10 @@ export function NavClient({
             label={dict.langLabel}
             tone={onHero ? "onDark" : "auto"}
           />
-          <ThemeToggle tone={onHero ? "onDark" : "auto"} />
+          <ThemeToggle
+            tone={onHero ? "onDark" : "auto"}
+            dict={themeToggleDict}
+          />
           <Button href={href("/konsultasi")} variant="primary">
             {dict.cta}
           </Button>
@@ -140,7 +145,7 @@ export function NavClient({
             ))}
             <div className="mt-2 flex items-center gap-3">
               <LangSwitcher locale={locale} label={dict.langLabel} tone="auto" />
-              <ThemeToggle tone="auto" />
+              <ThemeToggle tone="auto" dict={themeToggleDict} />
               <Button
                 href={href("/konsultasi")}
                 variant="primary"

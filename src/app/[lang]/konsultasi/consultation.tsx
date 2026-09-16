@@ -14,6 +14,7 @@ import {
   type Industry,
   type Lead,
 } from "@/lib/consultation";
+import type { Dictionary } from "@/dictionaries/id";
 
 const fieldCls =
   "w-full rounded-lg border border-line bg-surface px-3 py-2 text-sm text-ink outline-none transition-colors focus:border-ink/30";
@@ -83,12 +84,18 @@ async function readSse(
   }
 }
 
-export function Consultation() {
+export function Consultation({
+  dict,
+  initialIndustry,
+}: {
+  dict: Dictionary["konsultasi"];
+  initialIndustry?: Industry;
+}) {
   const [phase, setPhase] = useState<Phase>("intake");
   const [lead, setLead] = useState<Lead>({
     name: "",
     email: "",
-    industry: "ecommerce",
+    industry: initialIndustry ?? "ecommerce",
     needs: "",
   });
   const [messages, setMessages] = useState<UiMessage[]>([]);
@@ -211,18 +218,16 @@ export function Consultation() {
     <section className="py-14 md:py-20">
       <Container>
         <div className="max-w-2xl">
-          <Kicker>Konsultasi</Kicker>
+          <Kicker>{dict.kicker}</Kicker>
           <h1 className="mt-4 text-3xl font-semibold tracking-tight md:text-[2.6rem] md:leading-[1.12]">
-            Ceritakan kebutuhan Anda.{" "}
+            {dict.titleBefore}{" "}
             <span className="font-serif font-normal italic text-accent-strong">
-              Dapatkan arah solusi
+              {dict.titleEmphasis}
             </span>{" "}
-            dalam hitungan menit.
+            {dict.titleAfter}
           </h1>
           <p className="mt-4 text-base leading-relaxed text-muted md:text-lg">
-            Asisten ini menjawab dengan basis pengetahuan BYouAI. Isi data
-            singkat, lalu tanyakan apa saja — dari cakupan, kesiapan data, hingga
-            estimasi biaya.
+            {dict.lead}
           </p>
         </div>
 

@@ -3,6 +3,7 @@
 import { useSyncExternalStore } from "react";
 import { cn } from "@/lib/cn";
 import { Icon, type IconName } from "@/components/icons";
+import type { Dictionary } from "@/dictionaries/id";
 
 type Mode = "system" | "light" | "dark";
 
@@ -12,11 +13,6 @@ const ICON: Record<Mode, IconName> = {
   system: "monitor",
   light: "sun",
   dark: "moon",
-};
-const LABEL: Record<Mode, string> = {
-  system: "sistem",
-  light: "terang",
-  dark: "gelap",
 };
 
 // Same-document changes don't fire the native `storage` event, so keep our own
@@ -59,7 +55,13 @@ function apply(next: Mode) {
   listeners.forEach((l) => l());
 }
 
-export function ThemeToggle({ tone = "auto" }: { tone?: "auto" | "onDark" }) {
+export function ThemeToggle({
+  tone = "auto",
+  dict,
+}: {
+  tone?: "auto" | "onDark";
+  dict: Dictionary["themeToggle"];
+}) {
   const mode = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
   const next = ORDER[(ORDER.indexOf(mode) + 1) % ORDER.length];
 
@@ -73,8 +75,8 @@ export function ThemeToggle({ tone = "auto" }: { tone?: "auto" | "onDark" }) {
           ? "border-white/20 text-white/80 hover:border-white/40 hover:text-white"
           : "border-line text-muted hover:border-ink/25 hover:text-ink",
       )}
-      aria-label={`Tema saat ini: ${LABEL[mode]}. Ganti ke ${LABEL[next]}.`}
-      title={`Tema: ${LABEL[mode]}`}
+      aria-label={`${dict.current}: ${dict.modes[mode]}. ${dict.switchTo} ${dict.modes[next]}.`}
+      title={`${dict.label}: ${dict.modes[mode]}`}
     >
       <Icon name={ICON[mode]} className="h-4 w-4" />
     </button>

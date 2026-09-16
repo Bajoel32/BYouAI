@@ -8,5 +8,12 @@ import { NavClient } from "@/components/nav-client";
  */
 export async function Nav({ solid = false }: { solid?: boolean }) {
   const [dict, locale] = await Promise.all([getDictionary(), getLocale()]);
-  return <NavClient dict={dict.nav} locale={locale} solid={solid} />;
+  return (
+    <NavClient
+      dict={dict.nav}
+      themeToggleDict={dict.themeToggle}
+      locale={locale}
+      solid={solid}
+    />
+  );
 }

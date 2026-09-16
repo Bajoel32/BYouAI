@@ -78,6 +78,11 @@ export const en: Dictionary = {
         description:
           "Tell the BYouAI assistant what you need — scope, data, and a cost estimate for custom RAG-based AI on top of your own data.",
       },
+      solusiEcommerce: {
+        title: "E-commerce Solutions",
+        description:
+          "An AI agent for online stores — answers in real time from your catalog, stock, pricing, and return policy, with actions into your store's API and handoff to your CS team.",
+      },
       privasi: {
         title: "Privacy Policy",
         description:
@@ -117,6 +122,17 @@ export const en: Dictionary = {
     langLabel: "Change language",
   },
 
+  themeToggle: {
+    label: "Theme",
+    current: "Current theme",
+    switchTo: "Switch to",
+    modes: {
+      system: "system",
+      light: "light",
+      dark: "dark",
+    },
+  },
+
   footer: {
     tagline:
       "Custom RAG-based AI on top of your own data. Accurate, cited, production-ready.",
@@ -136,10 +152,10 @@ export const en: Dictionary = {
       {
         title: "Solutions",
         links: [
-          { label: "E-commerce", href: "/solusi" },
-          { label: "Law Firms", href: "/solusi" },
-          { label: "Clinics & Doctors", href: "/solusi" },
-          { label: "Other industries", href: "/#kontak" },
+          { label: "E-commerce", href: "/solusi/e-commerce" },
+          { label: "Law Firms", href: "/solusi/firma-hukum" },
+          { label: "Clinics & Doctors", href: "/solusi/klinik-dokter" },
+          { label: "Other industries", href: "/konsultasi?industri=lainnya" },
         ],
       },
       {
@@ -408,6 +424,21 @@ export const en: Dictionary = {
         cta: "Contact the team",
       },
     },
+  },
+
+  konsultasi: {
+    kicker: "Consultation",
+    titleBefore: "Tell us what you need.",
+    titleEmphasis: "Get a direction",
+    titleAfter: "in minutes.",
+    lead: "This assistant answers from BYouAI's knowledge base. Fill in a few details, then ask anything — from scope and data readiness to a cost estimate.",
+  },
+
+  solusiEcommerce: {
+    kicker: "Solutions · E-commerce",
+    titleBefore: "A shopping & customer service agent that",
+    titleEmphasis: "knows your store",
+    lead: "Built on your catalog, inventory, and store policies — not a generic chatbot. Every answer carries its source, every action connects to the systems you already use.",
   },
 
   og: {

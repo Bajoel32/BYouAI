@@ -60,7 +60,7 @@ export async function Hero() {
 
           <div className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row">
             <Button
-              href="#kontak"
+              href={localizedHref("/konsultasi", locale)}
               variant="primary"
               className="w-full sm:w-auto"
             >
