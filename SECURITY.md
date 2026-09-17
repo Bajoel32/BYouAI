@@ -14,7 +14,7 @@ publik untuk kerentanan yang belum diperbaiki.
 | Response headers | CSP, HSTS, `X-Frame-Options: DENY`, `X-Content-Type-Options`, `Referrer-Policy`, `Permissions-Policy`, COOP/CORP, `X-Robots-Tag` untuk `/api` & `/invoice` | `next.config.ts` |
 | Rate limiting (per IP) | 60 req/menit umum, 12 req/menit untuk `/api` + semua POST | `proxy.ts` |
 | Rate limiting (chat) | 20 pesan / 10 menit per IP | `src/app/api/konsultasi/chat/route.ts` |
-| Rate limiting (form lead) | 5 submit / 10 menit per IP | `src/app/solusi/e-commerce/actions.ts` |
+| Rate limiting (form lead) | 5 submit / 10 menit per IP | `src/app/[lang]/solusi/e-commerce/actions.ts` |
 | Plafon biaya OpenAI | Global gate: maks 120 panggilan/menit + 8 konkuren untuk seluruh proses, tidak bergantung pada IP | `src/lib/rate-limit.ts` → `acquireGlobalSlot` |
 | CSRF | Cek `Origin` / `Sec-Fetch-Site` untuk POST ke `/api/*`; Server Action pakai cek same-origin bawaan Next | `proxy.ts`, `next.config.ts` (`serverActions.allowedOrigins`) |
 | Batas ukuran body | `/api/*` ditolak `413` bila `Content-Length` > 1 MB; Server Action dibatasi 64 KB; buffer proxy dibatasi 1 MB | `proxy.ts`, `next.config.ts` |
