@@ -1,7 +1,7 @@
 # `/konsultasi` — check results
 
 Date: 2026-09-05
-Scope: `src/app/konsultasi/*`, `src/app/api/konsultasi/chat/route.ts`, and the
+Scope: `src/app/[lang]/konsultasi/*`, `src/app/api/konsultasi/chat/route.ts`, and the
 libs they pull in (`src/lib/consultation.ts`, `env.ts`, `openai.ts`,
 `supabase.ts`, `rag.ts`, `plans.ts`).
 
