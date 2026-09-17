@@ -15,7 +15,7 @@
 
 [**Live site**](https://b-you-ai-7syo.vercel.app/en) · [Indonesian version](https://b-you-ai-7syo.vercel.app/) · [AI consultation](https://b-you-ai-7syo.vercel.app/en/konsultasi) · [Security notes](SECURITY.md)
 
-![BYouAI landing page](docs/screenshot-home.png)
+![BYouAI landing page](docs/screenshot-home.jpg)
 
 </div>
 
