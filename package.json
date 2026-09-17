@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "next typegen && tsc --noEmit",
     "knip": "knip",
     "ingest": "node --env-file=.env.local scripts/ingest.mts"
   },
