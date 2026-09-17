@@ -179,3 +179,7 @@ The site renders without any credentials. Only the assistant needs them.
 ## Author
 
 **Aswan** ([@Bajoel32](https://github.com/Bajoel32)) · AI engineer, building RAG and agent systems for real businesses.
+
+## License
+
+Released under the [MIT License](LICENSE).
