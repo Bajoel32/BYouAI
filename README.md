@@ -4,7 +4,7 @@
 
 **Custom RAG-based AI assistants and agents for businesses: e-commerce, law firms, clinics and more.**
 
-[![Live demo](https://img.shields.io/badge/Live%20demo-b--you--ai--7syo.vercel.app-10b981?style=for-the-badge&logo=vercel&logoColor=white)](https://b-you-ai-7syo.vercel.app/en)
+[![Live demo](https://img.shields.io/badge/Live%20demo-b--you--ai.vercel.app-10b981?style=for-the-badge&logo=vercel&logoColor=white)](https://b-you-ai.vercel.app/en)
 
 ![Next.js](https://img.shields.io/badge/Next.js-16-000?logo=nextdotjs)
 ![React](https://img.shields.io/badge/React-19-149eca?logo=react)
@@ -13,7 +13,7 @@
 ![OpenAI](https://img.shields.io/badge/OpenAI-chat%20%2B%20embeddings-412991?logo=openai)
 ![Supabase](https://img.shields.io/badge/Supabase-pgvector-3ecf8e?logo=supabase&logoColor=white)
 
-[**Live site**](https://b-you-ai-7syo.vercel.app/en) · [Indonesian version](https://b-you-ai-7syo.vercel.app/) · [AI consultation](https://b-you-ai-7syo.vercel.app/en/konsultasi) · [Security notes](SECURITY.md)
+[**Live site**](https://b-you-ai.vercel.app/en) · [Indonesian version](https://b-you-ai.vercel.app/) · [AI consultation](https://b-you-ai.vercel.app/en/konsultasi) · [Security notes](SECURITY.md)
 
 ![BYouAI landing page](docs/screenshot-home.jpg)
 
@@ -42,13 +42,13 @@ of a client's own data. The site is more than static pages. It includes:
 
 | Page | What to look at |
 | --- | --- |
-| [Home](https://b-you-ai-7syo.vercel.app/en) | Landing page, RAG pipeline overview, pricing |
-| [AI consultation](https://b-you-ai-7syo.vercel.app/en/konsultasi) | Streaming RAG chat with citations and tool-call action cards |
-| [E-commerce solution](https://b-you-ai-7syo.vercel.app/en/solusi/e-commerce) | Agent workflow diagram, customer-chat sandbox, lead form (Server Action) |
-| [Law firm demo](https://b-you-ai-7syo.vercel.app/en/solusi/firma-hukum) | Document analysis: clause extraction, tiered risk findings, Q&A with article references |
-| [Clinic demo](https://b-you-ai-7syo.vercel.app/en/solusi/klinik-dokter) | Front-desk admin assistant simulation |
-| [Plan estimate / invoice](https://b-you-ai-7syo.vercel.app/en/invoice) | Editable invoice generator (IDR / USD / EUR) |
-| [Security](https://b-you-ai-7syo.vercel.app/en/keamanan) | Data handling and security posture |
+| [Home](https://b-you-ai.vercel.app/en) | Landing page, RAG pipeline overview, pricing |
+| [AI consultation](https://b-you-ai.vercel.app/en/konsultasi) | Streaming RAG chat with citations and tool-call action cards |
+| [E-commerce solution](https://b-you-ai.vercel.app/en/solusi/e-commerce) | Agent workflow diagram, customer-chat sandbox, lead form (Server Action) |
+| [Law firm demo](https://b-you-ai.vercel.app/en/solusi/firma-hukum) | Document analysis: clause extraction, tiered risk findings, Q&A with article references |
+| [Clinic demo](https://b-you-ai.vercel.app/en/solusi/klinik-dokter) | Front-desk admin assistant simulation |
+| [Plan estimate / invoice](https://b-you-ai.vercel.app/en/invoice) | Editable invoice generator (IDR / USD / EUR) |
+| [Security](https://b-you-ai.vercel.app/en/keamanan) | Data handling and security posture |
 
 > The industry demos are client-side simulations with curated data. They make no
 > model calls. The consultation assistant is the part backed by real LLM calls.
